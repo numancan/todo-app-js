@@ -1,0 +1,55 @@
+<!DOCTYPE html>
+<html lang="">
+  <head>
+    <meta charset="utf-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <title>TO-DO App</title>
+    <link rel="stylesheet" href="css/styles.css" />
+    <link
+      rel="stylesheet"
+      href="https://use.fontawesome.com/releases/v5.6.3/css/all.css"
+      integrity="sha384-UHRtZLI+pbxtHCWp1t77Bi1L4ZtiqrqD80Kn4Z8NTSRyMA2Fd33n5dQ8lWUE00s/"
+      crossorigin="anonymous"
+    />
+    <link
+      href="https://fonts.googleapis.com/css?family=Poppins&display=swap"
+      rel="stylesheet"
+    />
+  </head>
+
+  <body>
+    <main class="main-container centered">
+      <header>
+        <h1 class="app-name">TODOPLS</h1>
+        <div class="header__container">
+          <button class="burger"><i class="fas fa-bars"></i></button>
+          <h2 class="project-title"></h2>
+          <button onclick="activeProject.removeAllTask()" class="btn-res">
+            <i class="fas fa-sync-alt"></i>
+          </button>
+          <button onclick="removeProject()" class="btn-del">
+            <i class="fas fa-trash-alt"></i>
+          </button>
+        </div>
+      </header>
+
+      <section class="side-bar">
+        <ul class="project-list"></ul>
+        <button onclick="createNewProject()" class="btn-add-project">
+          <i class="far fa-times-circle"></i>
+        </button>
+      </section>
+
+      <section class="task-container">
+        <ul class="task-list"></ul>
+        <div class="add-task-area">
+          <input type="text" placeholder="Your task.." />
+          <button onclick="activeProject.addTask()" class="btn-add">
+            <i class="fas fa-plus-circle"></i>
+          </button>
+        </div>
+      </section>
+    </main>
+    <script type="text/javascript" src="main.js"></script>
+  </body>
+</html>

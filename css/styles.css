@@ -1,0 +1,366 @@
+* {
+  box-sizing: border-box;
+  margin: 0;
+  padding: 0;
+  font-family: "Poppins", sans-serif;
+}
+
+/* BUTTON CONFIG */
+.btn-del,
+.btn-res,
+.btn-add,
+.burger,
+.btn-del-task,
+.btn-add-project {
+  background: none;
+  border: none;
+  outline: none;
+  cursor: pointer;
+  font-size: 30px;
+  width: 50px;
+  height: 50px;
+  border-radius: 50%;
+  transition: background 250ms ease-in;
+}
+
+.btn-del:hover,
+.btn-res:hover,
+.btn-add:hover,
+.burger:hover,
+.btn-add-project:hover {
+  background-color: rgba(255, 255, 255, 0.16);
+}
+
+body {
+  height: 100vh;
+  /* BACKGROUND COLOR */
+  background: #d66d75;
+  background: -webkit-linear-gradient(to bottom, #d66d75, #e29587);
+  background: linear-gradient(to bottom, #d66d75, #e29587);
+}
+
+.centered {
+  margin: 0;
+  position: absolute;
+  top: 50%;
+  left: 50%;
+  -ms-transform: translate(-50%, -50%);
+  transform: translate(-50%, -50%);
+}
+
+.main-container {
+  background-color: whitesmoke;
+  width: 80%;
+  max-width: 1200px;
+  height: 70vh;
+  border-radius: 15px;
+  filter: drop-shadow(0px 0px 10px rgba(0, 0, 0, 0.8));
+  -webkit-filter: drop-shadow(0px 0px 10px rgba(0, 0, 0, 0.8));
+}
+
+/* -----------HEADER--------- */
+header {
+  background: #3dc1d6;
+  opacity: 0.85;
+  width: 100%;
+  height: 12%;
+  border-radius: 15px 15px 0 0;
+
+  display: flex;
+  align-items: center;
+
+  /* Stick to top */
+  position: absolute;
+  top: 0;
+  z-index: 2;
+}
+
+header h1 {
+  width: 20%; /* Same width with side-bar */
+  text-align: center;
+  color: whitesmoke;
+}
+
+.header__container {
+  height: 100%;
+  width: 80%;
+
+  display: flex;
+  align-items: center;
+  justify-content: flex-end;
+  padding: 0 30px;
+}
+
+.header__container button {
+  margin: 0 40px;
+}
+
+.btn-del i {
+  color: #cb2d3e;
+  background: -webkit-linear-gradient(#ef473a, rgb(187, 35, 50));
+  background-clip: text;
+  -webkit-background-clip: text;
+  -webkit-text-fill-color: transparent;
+
+  filter: drop-shadow(0 0 2px rgba(0, 0, 0, 0.5));
+  -webkit-filter: drop-shadow(0 0 2px rgba(0, 0, 0, 0.5));
+}
+
+.btn-res i {
+  color: #f46b45;
+  background: -webkit-linear-gradient(#f46b45, #eea849);
+  background-clip: text;
+  -webkit-background-clip: text;
+  -webkit-text-fill-color: transparent;
+
+  filter: drop-shadow(0 0 2px rgba(0, 0, 0, 0.5));
+  -webkit-filter: drop-shadow(0 0 2px rgba(0, 0, 0, 0.5));
+}
+
+.burger,
+.project-title {
+  display: none;
+}
+
+.burger i {
+  color: whitesmoke;
+  z-index: initial;
+}
+
+.project-title {
+  text-align: center;
+  text-transform: uppercase;
+  color: whitesmoke;
+}
+
+/* ---------SIDE BAR-------- */
+.side-bar {
+  background: #22252e;
+  float: left;
+  width: 20%; /* Same width with header h1 */
+  height: 100%;
+  padding-top: 13%;
+  border-radius: 15px 0 0 15px;
+}
+
+.project-list {
+  list-style: none;
+}
+
+.project-list li {
+  width: 100%;
+  height: 50px;
+
+  line-height: 50px;
+  text-align: center;
+  cursor: pointer;
+  text-transform: capitalize;
+  color: whitesmoke;
+  border-radius: 0 15px 15px 0;
+  transition: width 300ms, background-color 250ms;
+  -webkit-transition: width 300ms, background-color 250ms;
+}
+
+.project-list .active {
+  background-color: #2b2e3a;
+  width: 110%;
+}
+
+.btn-add-project {
+  transform: rotate(45deg);
+  margin: 0 auto;
+  display: block;
+}
+
+.btn-add-project i {
+  color: #f0a0aa;
+
+  filter: drop-shadow(0 0 2px rgba(0, 0, 0, 0.5));
+  -webkit-filter: drop-shadow(0 0 2px rgba(0, 0, 0, 0.5));
+}
+
+/* -------TASK CONTAINER--------- */
+
+.task-container {
+  height: 100%;
+  display: flex;
+  flex-direction: column;
+}
+
+.task-list {
+  height: 90%;
+  display: flex;
+  flex-direction: column;
+  justify-content: flex-end;
+}
+
+.task-list li {
+  background: linear-gradient(to right, #ee9ca7, #f9bac1);
+  margin: 10px 20px;
+  padding: 0 8px 0 15px;
+  border-radius: 24px;
+  display: flex;
+  align-items: center;
+}
+
+.task-list input {
+  width: 1.3em;
+  height: 1.3em;
+  background-color: white;
+  border-radius: 50%;
+  -webkit-appearance: none;
+  outline: none;
+  cursor: pointer;
+}
+
+.task-list input:checked {
+  background-color: green;
+}
+
+.task-list input + label::after {
+  content: "";
+  border-bottom: 0.2em solid green;
+  border-radius: 10px;
+  margin-top: calc(0.2em / 2 * -1);
+  position: absolute;
+  top: 50%;
+  left: 10px;
+
+  opacity: 0;
+  width: 0%;
+  transition: width 300ms, opacity 100ms;
+}
+
+.task-list input:checked + label::after {
+  opacity: 1;
+  width: 95%;
+}
+
+.task-list label {
+  color: #544c4c;
+  flex: 2;
+  padding-left: 10px;
+  position: relative;
+}
+
+.task-list button {
+  transform: rotate(45deg);
+}
+
+.task-list li .btn-del-task i {
+  color: #cf4444;
+}
+
+.add-task-area {
+  height: 10%;
+  display: flex;
+  align-items: center;
+  justify-content: space-evenly;
+}
+
+.add-task-area input {
+  width: 80%;
+  border: none;
+  border-bottom: 1px solid #707070;
+  outline: none;
+}
+
+.btn-add i {
+  color: #6ab645;
+  font-size: 40px;
+}
+
+@media only screen and (max-width: 1024px) {
+  .main-container {
+    height: 80vh;
+  }
+
+  header {
+    height: 9%;
+  }
+
+  header h1,
+  .btn-res,
+  .btn-del {
+    font-size: 25px;
+  }
+}
+
+@media only screen and (max-width: 768px) {
+  .main-container {
+    background-color: whitesmoke;
+    width: 100%;
+    height: 100vh;
+
+    border-radius: 0;
+    max-width: none;
+    filter: none;
+    -webkit-filter: none;
+  }
+
+  header h1 {
+    width: 23%;
+  }
+
+  .header__container {
+    padding: 0 5px;
+  }
+
+  .side-bar {
+    width: 23%;
+    padding-top: 18%;
+  }
+}
+
+@media only screen and (max-width: 512px) {
+  header {
+    background: #22252e;
+    border-radius: 0 0 15px 15px;
+    height: 10%;
+  }
+  .header__container {
+    width: 100%;
+    justify-content: space-between;
+  }
+
+  .burger,
+  .project-title {
+    display: block;
+  }
+
+  .header__container button {
+    margin: 0;
+  }
+
+  .app-name {
+    display: none;
+  }
+
+  .side-bar {
+    width: 50%;
+    z-index: 3;
+    position: absolute;
+    right: 110%;
+    border-radius: 0;
+  }
+
+  .side-bar.open {
+    left: 0;
+    right: 0;
+  }
+
+  .side-bar.open::after {
+    content: "";
+    position: absolute;
+    width: 100%;
+    height: 100%;
+    top: 0;
+    left: 100%;
+    z-index: -1;
+    background: rgba(0, 0, 0, 0.5);
+  }
+
+  .project-title {
+    flex: 2;
+  }
+}
