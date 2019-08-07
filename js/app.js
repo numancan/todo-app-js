@@ -1,6 +1,6 @@
 ﻿const taskInput = document.querySelector(".add-task-area input");
-const taskList = document.querySelector(".task-list");
 const projectContainer = document.querySelector(".project-list");
+const taskList = document.querySelector(".task-list");
 const burgerBtn = document.querySelector(".burger");
 const sideBar = document.querySelector(".side-bar");
 
@@ -97,17 +97,17 @@ const appendProjectToSidebar = project => {
   item.addEventListener("click", () => {
     sideBar.classList.toggle("open");
   });
-  projectList.push(project)
+  projectList.push(project);
   item.innerHTML += project.name;
   projectContainer.appendChild(item);
 };
 
 const createNewProject = () => {
-  let projectName = prompt("Please write your project name.")
+  let projectName = prompt("Please write your project name.");
   if (projectName) {
-    let project = new Project(projectName, [])
-    appendProjectToSidebar(project)
-    changeActiveProject(project)
+    let project = new Project(projectName, []);
+    appendProjectToSidebar(project);
+    changeActiveProject(project);
   }
 };
 
@@ -141,8 +141,3 @@ burgerBtn.addEventListener("click", () => {
 });
 
 getProjectsFromStorge();
-
-// const arr = [{'name':'work','tasks':[{'task':"havuza gir.",'checked':true},{'task':'Come to party.','checked':false}]},
-//               {'name':'study','tasks':[{'task':"İşine bak.",'checked':false},{'task':"Uyuma kalk.",'checked':false},{'task':'Get out here..','checked':true}]}];
-
-// localStorage.setItem('todo-app', JSON.stringify(arr));
