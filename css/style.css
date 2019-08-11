@@ -2,7 +2,7 @@
   box-sizing: border-box;
   margin: 0;
   padding: 0;
-  font-family: "Poppins", sans-serif;
+  font-family: 'Poppins', sans-serif;
 }
 
 /* BUTTON CONFIG */
@@ -33,7 +33,6 @@
 
 body {
   height: 100vh;
-  /* BACKGROUND COLOR */
   background: #d66d75;
   background: -webkit-linear-gradient(to bottom, #d66d75, #e29587);
   background: linear-gradient(to bottom, #d66d75, #e29587);
@@ -221,7 +220,7 @@ header h1 {
 }
 
 .task-list input + label::after {
-  content: "";
+  content: '';
   border-bottom: 0.2em solid green;
   border-radius: 10px;
   margin-top: calc(0.2em / 2 * -1);
@@ -341,24 +340,13 @@ header h1 {
     width: 50%;
     z-index: 3;
     position: absolute;
-    right: 110%;
+    left: -100%;
     border-radius: 0;
+    transition: left 0.5s ease-out;
   }
 
   .side-bar.open {
     left: 0;
-    right: 0;
-  }
-
-  .side-bar.open::after {
-    content: "";
-    position: absolute;
-    width: 100%;
-    height: 100%;
-    top: 0;
-    left: 100%;
-    z-index: -1;
-    background: rgba(0, 0, 0, 0.5);
   }
 
   .project-title {
