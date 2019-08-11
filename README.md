@@ -1,2 +1,1 @@
-# todo-app-js
- 
+# Simple TODO App with Pure Javascript
