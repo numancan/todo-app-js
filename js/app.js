@@ -1,8 +1,8 @@
-﻿const taskInput = document.querySelector(".add-task-area input");
-const projectContainer = document.querySelector(".project-list");
-const taskList = document.querySelector(".task-list");
-const burgerBtn = document.querySelector(".burger");
-const sideBar = document.querySelector(".side-bar");
+﻿const taskInput = document.querySelector('.add-task-area input');
+const projectContainer = document.querySelector('.project-list');
+const taskList = document.querySelector('.task-list');
+const burgerBtn = document.querySelector('.burger');
+const sideBar = document.querySelector('.side-bar');
 
 let projectList = [];
 let activeProject, lastActiveProject;
@@ -19,7 +19,7 @@ class Project {
     this._createTaskItem({ task: task }, length);
 
     // Clear input's value
-    taskInput.value = "";
+    taskInput.value = '';
     this.taskArr.push({ task: task, checked: false });
     this._saveToLocalStorge();
   }
@@ -33,7 +33,7 @@ class Project {
   removeAllTask() {
     this.taskArr = [];
     this._saveToLocalStorge();
-    taskList.innerHTML = "";
+    taskList.innerHTML = '';
   }
 
   changeCheckboxValue(taskIndex) {
@@ -42,7 +42,7 @@ class Project {
   }
 
   drawTaskItem() {
-    taskList.innerHTML = "";
+    taskList.innerHTML = '';
 
     this.taskArr.forEach((object, index) => {
       this._createTaskItem(object, index);
@@ -52,19 +52,19 @@ class Project {
   /* ---PRIVATE FUNCTIONS--- */
 
   _createTaskItem(object, taskIndex) {
-    let element = document.createElement("li");
-    element.classList.add("task");
+    let element = document.createElement('li');
+    element.classList.add('task');
     element.innerHTML = `<input type="checkbox">
                          <label>${object.task}</label>
                          <button class="btn-del-task"><i class="fas fa-plus-circle"></i></button>`;
 
     let checkbox = element.children[0];
     checkbox.checked = object.checked;
-    checkbox.addEventListener("click", () => {
+    checkbox.addEventListener('click', () => {
       this.changeCheckboxValue(taskIndex);
     });
 
-    element.children[2].addEventListener("click", () => {
+    element.lastElementChild.addEventListener('click', () => {
       this.removeTask(taskIndex);
     });
 
@@ -79,9 +79,9 @@ class Project {
 const getProjectsFromStorge = () => {
   for (let i = 0; i < localStorage.length; i++) {
     let key = localStorage.key(i);
-    if (key.includes("todo-app")) {
+    if (key.includes('todo-app')) {
       let value = JSON.parse(localStorage.getItem(key));
-      let project = new Project(key.split("todo-app-")[1], value);
+      let project = new Project(key.split('todo-app-')[1], value);
       appendProjectToSidebar(project);
     }
   }
@@ -90,12 +90,12 @@ const getProjectsFromStorge = () => {
 };
 
 const appendProjectToSidebar = project => {
-  const item = document.createElement("li");
-  item.addEventListener("click", () => {
+  const item = document.createElement('li');
+  item.addEventListener('click', () => {
     changeActiveProject(project);
   });
-  item.addEventListener("click", () => {
-    sideBar.classList.toggle("open");
+  item.addEventListener('click', () => {
+    sideBar.classList.toggle('open');
   });
   projectList.push(project);
   item.innerHTML += project.name;
@@ -103,41 +103,36 @@ const appendProjectToSidebar = project => {
 };
 
 const createNewProject = () => {
-  let projectName = prompt("Please write your project name.");
-  if (projectName) {
-    let project = new Project(projectName, []);
-    appendProjectToSidebar(project);
-    changeActiveProject(project);
-  }
+  let projectName = prompt('Please write your project name.');
+  if (!projectName) return;
+  let project = new Project(projectName, []);
+  appendProjectToSidebar(project);
+  changeActiveProject(project);
 };
 
 const changeActiveProject = (project = projectList[0]) => {
   let elementIndex = projectList.indexOf(activeProject);
   if (activeProject != undefined && elementIndex != -1)
-    projectContainer.children[elementIndex].classList.remove("active");
+    projectContainer.children[elementIndex].classList.remove('active');
 
   elementIndex = projectList.indexOf(project);
-  projectContainer.children[elementIndex].classList.add("active");
+  projectContainer.children[elementIndex].classList.add('active');
 
   activeProject = project;
-  document.querySelector(".project-title").innerHTML = activeProject.name;
+  document.querySelector('.project-title').innerHTML = activeProject.name;
   activeProject.drawTaskItem();
 };
 
 const removeProject = () => {
   let elementIndex = projectList.indexOf(activeProject);
-  // Remove from storge
   localStorage.removeItem(`todo-app-${activeProject.name}`);
-  // Delete element
   projectContainer.removeChild(projectContainer.children[elementIndex]);
-  // Remove from projectList
   projectList.splice(elementIndex, 1);
-  // ChangeActiveProject
   changeActiveProject();
 };
 
-burgerBtn.addEventListener("click", () => {
-  sideBar.classList.toggle("open");
+burgerBtn.addEventListener('click', () => {
+  sideBar.classList.toggle('open');
 });
 
 getProjectsFromStorge();
