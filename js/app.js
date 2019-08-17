@@ -4,6 +4,9 @@ const taskList = document.querySelector('.task-list');
 const burgerBtn = document.querySelector('.burger');
 const sideBar = document.querySelector('.side-bar');
 
+// TODO: nav açıkken yeni project açıldığında kapat
+// ekran sorunu mobil
+
 let projectList = [];
 let activeProject, lastActiveProject;
 
@@ -97,6 +100,7 @@ const appendProjectToSidebar = project => {
   item.addEventListener('click', () => {
     sideBar.classList.toggle('open');
   });
+  sideBar.classList.remove('open');
   projectList.push(project);
   item.innerHTML += project.name;
   projectContainer.appendChild(item);
@@ -133,6 +137,13 @@ const removeProject = () => {
 
 burgerBtn.addEventListener('click', () => {
   sideBar.classList.toggle('open');
+});
+
+taskInput.addEventListener('keyup', event => {
+  if (event.keyCode === 13) {
+    event.preventDefault();
+    activeProject.addTask();
+  }
 });
 
 getProjectsFromStorge();
