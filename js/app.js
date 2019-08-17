@@ -3,14 +3,12 @@ const projectContainer = document.querySelector('.project-list');
 const taskList = document.querySelector('.task-list');
 const burgerBtn = document.querySelector('.burger');
 const sideBar = document.querySelector('.side-bar');
-
-// TODO: nav açıkken yeni project açıldığında kapat
-// ekran sorunu mobil
+const projectTitle = document.querySelector('.project-title');
+const addBtn = document.querySelector('.btn-add');
 
 let projectList = [];
-let activeProject, lastActiveProject;
+let activeProject;
 
-// event.target ile sil verileri
 class Project {
   constructor(name, taskArr) {
     this.name = name.toLowerCase();
@@ -55,13 +53,13 @@ class Project {
   /* ---PRIVATE FUNCTIONS--- */
 
   _createTaskItem(object, taskIndex) {
-    let element = document.createElement('li');
+    const element = document.createElement('li');
     element.classList.add('task');
     element.innerHTML = `<input type="checkbox">
                          <label>${object.task}</label>
                          <button class="btn-del-task"><i class="fas fa-plus-circle"></i></button>`;
 
-    let checkbox = element.children[0];
+    const checkbox = element.children[0];
     checkbox.checked = object.checked;
     checkbox.addEventListener('click', () => {
       this.changeCheckboxValue(taskIndex);
@@ -81,10 +79,10 @@ class Project {
 
 const getProjectsFromStorge = () => {
   for (let i = 0; i < localStorage.length; i++) {
-    let key = localStorage.key(i);
+    const key = localStorage.key(i);
     if (key.includes('todo-app')) {
-      let value = JSON.parse(localStorage.getItem(key));
-      let project = new Project(key.split('todo-app-')[1], value);
+      const value = JSON.parse(localStorage.getItem(key));
+      const project = new Project(key.split('todo-app-')[1], value);
       appendProjectToSidebar(project);
     }
   }
@@ -107,43 +105,58 @@ const appendProjectToSidebar = project => {
 };
 
 const createNewProject = () => {
-  let projectName = prompt('Please write your project name.');
+  const projectName = prompt('Please write your project name.');
   if (!projectName) return;
-  let project = new Project(projectName, []);
+  const project = new Project(projectName, []);
   appendProjectToSidebar(project);
   changeActiveProject(project);
 };
 
 const changeActiveProject = (project = projectList[0]) => {
-  let elementIndex = projectList.indexOf(activeProject);
-  if (activeProject != undefined && elementIndex != -1)
-    projectContainer.children[elementIndex].classList.remove('active');
+  if (!projectList.length) {
+    projectTitle.innerHTML = '';
+    taskList.innerHTML = '';
+    activeProject = null;
+    return;
+  }
 
-  elementIndex = projectList.indexOf(project);
+  if (activeProject) {
+    let elementIndex = projectList.indexOf(activeProject);
+    if (elementIndex > -1)
+      projectContainer.children[elementIndex].classList.remove('active');
+  }
+
+  let elementIndex = projectList.indexOf(project);
   projectContainer.children[elementIndex].classList.add('active');
-
   activeProject = project;
-  document.querySelector('.project-title').innerHTML = activeProject.name;
+  projectTitle.innerHTML = activeProject.name;
   activeProject.drawTaskItem();
 };
 
 const removeProject = () => {
-  let elementIndex = projectList.indexOf(activeProject);
+  const elementIndex = projectList.indexOf(activeProject);
   localStorage.removeItem(`todo-app-${activeProject.name}`);
   projectContainer.removeChild(projectContainer.children[elementIndex]);
   projectList.splice(elementIndex, 1);
   changeActiveProject();
 };
 
-burgerBtn.addEventListener('click', () => {
-  sideBar.classList.toggle('open');
-});
+const addEventListeners = () => {
+  burgerBtn.addEventListener('click', () => {
+    sideBar.classList.toggle('open');
+  });
 
-taskInput.addEventListener('keyup', event => {
-  if (event.keyCode === 13) {
-    event.preventDefault();
-    activeProject.addTask();
-  }
-});
+  taskInput.addEventListener('keyup', event => {
+    if (event.keyCode === 13) {
+      event.preventDefault();
+      activeProject.addTask();
+    }
+  });
+
+  addBtn.addEventListener('click', () => {
+    activeProject && activeProject.addTask();
+  });
+};
 
 getProjectsFromStorge();
+addEventListeners();
