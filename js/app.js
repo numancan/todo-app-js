@@ -17,6 +17,7 @@ class Project {
   }
 
   addTask(task = taskInput.value) {
+    if (!task) return;
     this._createTaskItem({ task: task }, length);
 
     // Clear input's value
@@ -65,7 +66,9 @@ class Project {
       this.changeCheckboxValue(taskIndex);
     });
 
-    element.lastElementChild.addEventListener('click', () => {
+    element.lastElementChild.addEventListener('click', event => {
+      console.log(event.target);
+
       this.removeTask(taskIndex);
     });
 
@@ -155,6 +158,10 @@ const addEventListeners = () => {
 
   addBtn.addEventListener('click', () => {
     activeProject && activeProject.addTask();
+  });
+
+  taskList.addEventListener('click', () => {
+    sideBar.classList.contains('open') && sideBar.classList.remove('open');
   });
 };
 
