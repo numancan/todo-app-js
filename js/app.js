@@ -18,16 +18,14 @@ class Project {
 
   addTask(task = taskInput.value) {
     if (!task) return;
-    this._createTaskItem({ task: task }, length);
-
-    // Clear input's value
+    this._createTaskItem({ task: task }, this.taskArr.length);
     taskInput.value = '';
     this.taskArr.push({ task: task, checked: false });
     this._saveToLocalStorge();
   }
 
-  removeTask(taskIndex) {
-    taskList.removeChild(taskList.children[taskIndex]);
+  removeTask(task) {
+    const taskIndex = this.taskArr.indexOf(task);
     this.taskArr.splice(taskIndex, 1);
     this._saveToLocalStorge();
   }
@@ -38,14 +36,14 @@ class Project {
     taskList.innerHTML = '';
   }
 
-  changeCheckboxValue(taskIndex) {
+  changeCheckboxValue(task) {
+    const taskIndex = this.taskArr.indexOf(task);
     this.taskArr[taskIndex].checked = !this.taskArr[taskIndex].checked;
     this._saveToLocalStorge();
   }
 
   drawTaskItem() {
     taskList.innerHTML = '';
-
     this.taskArr.forEach((object, index) => {
       this._createTaskItem(object, index);
     });
@@ -53,7 +51,7 @@ class Project {
 
   /* ---PRIVATE FUNCTIONS--- */
 
-  _createTaskItem(object, taskIndex) {
+  _createTaskItem(object) {
     const element = document.createElement('li');
     element.classList.add('task');
     element.innerHTML = `<input type="checkbox">
@@ -63,11 +61,12 @@ class Project {
     const checkbox = element.children[0];
     checkbox.checked = object.checked;
     checkbox.addEventListener('click', () => {
-      this.changeCheckboxValue(taskIndex);
+      this.changeCheckboxValue(object);
     });
 
     element.lastElementChild.addEventListener('click', event => {
-      this.removeTask(taskIndex);
+      this.removeTask(object);
+      taskList.removeChild(element);
     });
 
     taskList.appendChild(element);
