@@ -67,8 +67,6 @@ class Project {
     });
 
     element.lastElementChild.addEventListener('click', event => {
-      console.log(event.target);
-
       this.removeTask(taskIndex);
     });
 
