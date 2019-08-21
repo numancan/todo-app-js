@@ -24,10 +24,10 @@
         <div class="header__container">
           <button class="burger"><i class="fas fa-bars"></i></button>
           <h2 class="project-title"></h2>
-          <button onclick="activeProject.removeAllTask()" class="btn-res">
+          <button class="btn-res">
             <i class="fas fa-sync-alt"></i>
           </button>
-          <button onclick="removeProject()" class="btn-del">
+          <button class="btn-del">
             <i class="fas fa-trash-alt"></i>
           </button>
         </div>
@@ -35,18 +35,18 @@
 
       <section class="side-bar">
         <div class="holder">
-          <ul class="project-list"></ul>
-          <button onclick="createNewProject()" class="btn-add-project">
+          <ul class="project-container"></ul>
+          <button class="btn-add-project">
             <i class="far fa-times-circle"></i>
           </button>
         </div>
       </section>
 
-      <section class="task-container">
-        <ul class="task-list"></ul>
-        <div class="add-task-area">
-          <input type="text" placeholder="Your task.." />
-          <button class="btn-add">
+      <section class="todo-container">
+        <ul class="todo-list"></ul>
+        <div>
+          <input class="todo-input" type="text" placeholder="Your todo.." />
+          <button class="btn-todo-add">
             <i class="fas fa-plus-circle"></i>
           </button>
         </div>

@@ -1,164 +1,188 @@
-﻿const taskInput = document.querySelector('.add-task-area input');
-const projectContainer = document.querySelector('.project-list');
-const taskList = document.querySelector('.task-list');
-const burgerBtn = document.querySelector('.burger');
+﻿const projectContainer = document.querySelector('.project-container');
+const todoListContainer = document.querySelector('.todo-list');
+const todoInput = document.querySelector('.todo-input');
 const sideBar = document.querySelector('.side-bar');
 const projectTitle = document.querySelector('.project-title');
-const addBtn = document.querySelector('.btn-add');
 
+let idCount = 0;
 let projectList = [];
 let activeProject;
 
 class Project {
-  constructor(name, taskArr) {
+  constructor(name, todos, id) {
     this.name = name.toLowerCase();
-    this.taskArr = taskArr;
-    this._saveToLocalStorge();
+    this.todos = todos;
+    this.id = id;
+    this._saveToStorage();
   }
 
-  addTask(task = taskInput.value) {
-    if (!task) return;
-    this._createTaskItem({ task: task }, this.taskArr.length);
-    taskInput.value = '';
-    this.taskArr.push({ task: task, checked: false });
-    this._saveToLocalStorge();
+  addTodo() {
+    const input = todoInput.value;
+    const todo = { todo: input, checked: false };
+    todoInput.value = '';
+
+    this._createElement(todo);
+    this.todos.push(todo);
+    this._saveToStorage();
   }
 
-  removeTask(task) {
-    const taskIndex = this.taskArr.indexOf(task);
-    this.taskArr.splice(taskIndex, 1);
-    this._saveToLocalStorge();
+  removeTodo() {
+    const todoItem = event.target.parentElement;
+    const index = this._getTodoIndex(todoItem);
+    todoListContainer.removeChild(todoItem);
+    this.todos.splice(index, 1);
+    this._saveToStorage();
   }
 
-  removeAllTask() {
-    this.taskArr = [];
-    this._saveToLocalStorge();
-    taskList.innerHTML = '';
+  removeAllTodo() {
+    this.todos = [];
+    this._saveToStorage();
+    todoListContainer.innerHTML = '';
   }
 
-  changeCheckboxValue(task) {
-    const taskIndex = this.taskArr.indexOf(task);
-    this.taskArr[taskIndex].checked = !this.taskArr[taskIndex].checked;
-    this._saveToLocalStorge();
+  changeChecboxState() {
+    const todoItem = event.target.parentElement;
+    const index = this._getTodoIndex(todoItem);
+    this.todos[index].checked = !this.todos[index].checked;
+    this._saveToStorage();
   }
 
-  drawTaskItem() {
-    taskList.innerHTML = '';
-    this.taskArr.forEach((object, index) => {
-      this._createTaskItem(object, index);
+  render() {
+    todoListContainer.innerHTML = '';
+    this.todos.forEach(todoItem => {
+      this._createElement(todoItem);
     });
   }
 
-  /* ---PRIVATE FUNCTIONS--- */
-
-  _createTaskItem(object) {
+  /* PRIVATE FUNCTIONS */
+  _createElement({ todo, checked }) {
     const element = document.createElement('li');
-    element.classList.add('task');
+    element.classList.add('todo');
     element.innerHTML = `<input type="checkbox">
-                         <label>${object.task}</label>
-                         <button class="btn-del-task"><i class="fas fa-plus-circle"></i></button>`;
+                         <label>${todo}</label>
+												 <button class="btn-del-todo"><i class="fas fa-plus-circle"></i></button>`;
 
-    const checkbox = element.children[0];
-    checkbox.checked = object.checked;
+    const deleteBtn = element.querySelector('button');
+    const checkbox = element.querySelector('input');
+    checkbox.checked = checked;
+
     checkbox.addEventListener('click', () => {
-      this.changeCheckboxValue(object);
+      this.changeChecboxState();
     });
 
-    element.lastElementChild.addEventListener('click', event => {
-      this.removeTask(object);
-      taskList.removeChild(element);
+    deleteBtn.addEventListener('click', () => {
+      this.removeTodo();
     });
-
-    taskList.appendChild(element);
+    todoListContainer.appendChild(element);
   }
 
-  _saveToLocalStorge() {
-    localStorage.setItem(`todo-app-${this.name}`, JSON.stringify(this.taskArr));
+  _getTodoIndex(todoElement) {
+    return Array.prototype.indexOf.call(
+      todoListContainer.children,
+      todoElement
+    );
+  }
+
+  _saveToStorage() {
+    localStorage.setItem(`todo-app-${this.name}`, JSON.stringify(this.todos));
   }
 }
+
+const createProject = project => {
+  project = project || new Project(prompt('Project Name'), [], idCount++);
+  if (!project.name) return;
+  projectList.push(project);
+
+  const element = document.createElement('li');
+  element.innerHTML = project.name;
+  element.dataset.id = project.id;
+  element.addEventListener('click', () => {
+    changeActiveProject(project);
+    sideBar.classList.remove('open');
+  });
+  projectContainer.appendChild(element);
+
+  changeActiveProject(project);
+};
+
+const removeProject = () => {
+  const activeProjectEl = getElementByDataId(activeProject.id);
+  localStorage.removeItem(`todo-app-${activeProject.name}`);
+  projectContainer.removeChild(activeProjectEl);
+  projectList = projectList.filter(project => project.id != activeProject.id);
+  activeProject = null;
+  changeActiveProject();
+};
+
+const getElementByDataId = id => {
+  return projectContainer.querySelector(`[data-id='${id}']`);
+};
+
+const changeActiveProject = (project = projectList[0]) => {
+  if (!project) {
+    projectTitle.innerHTML = '';
+    return;
+  }
+
+  if (activeProject) {
+    const activeProjectEl = getElementByDataId(activeProject.id);
+    activeProjectEl.classList.remove('active');
+  }
+  activeProject = project;
+  projectTitle.innerHTML = project.name;
+
+  const projectElement = getElementByDataId(project.id);
+  projectElement.classList.add('active');
+  project.render();
+};
 
 const getProjectsFromStorge = () => {
   for (let i = 0; i < localStorage.length; i++) {
     const key = localStorage.key(i);
     if (key.includes('todo-app')) {
       const value = JSON.parse(localStorage.getItem(key));
-      const project = new Project(key.split('todo-app-')[1], value);
-      appendProjectToSidebar(project);
+      const projectName = key.split('todo-app-')[1];
+      const project = new Project(projectName, value, idCount++);
+      createProject(project);
     }
   }
-  if (!projectList.length) createNewProject();
+  if (!projectList.length) createProject();
   else changeActiveProject();
 };
 
-const appendProjectToSidebar = project => {
-  const item = document.createElement('li');
-  item.addEventListener('click', () => {
-    changeActiveProject(project);
-  });
-  item.addEventListener('click', () => {
-    sideBar.classList.toggle('open');
-  });
-  sideBar.classList.remove('open');
-  projectList.push(project);
-  item.innerHTML += project.name;
-  projectContainer.appendChild(item);
-};
-
-const createNewProject = () => {
-  const projectName = prompt('Please write your project name.');
-  if (!projectName) return;
-  const project = new Project(projectName, []);
-  appendProjectToSidebar(project);
-  changeActiveProject(project);
-};
-
-const changeActiveProject = (project = projectList[0]) => {
-  if (!projectList.length) {
-    projectTitle.innerHTML = '';
-    taskList.innerHTML = '';
-    activeProject = null;
-    return;
-  }
-
-  if (activeProject) {
-    let elementIndex = projectList.indexOf(activeProject);
-    if (elementIndex > -1)
-      projectContainer.children[elementIndex].classList.remove('active');
-  }
-
-  let elementIndex = projectList.indexOf(project);
-  projectContainer.children[elementIndex].classList.add('active');
-  activeProject = project;
-  projectTitle.innerHTML = activeProject.name;
-  activeProject.drawTaskItem();
-};
-
-const removeProject = () => {
-  const elementIndex = projectList.indexOf(activeProject);
-  localStorage.removeItem(`todo-app-${activeProject.name}`);
-  projectContainer.removeChild(projectContainer.children[elementIndex]);
-  projectList.splice(elementIndex, 1);
-  changeActiveProject();
-};
-
 const addEventListeners = () => {
+  const projectAdderBtn = document.querySelector('.btn-add-project');
+  const todoAdderBtn = document.querySelector('.btn-todo-add');
+  const burgerBtn = document.querySelector('.burger');
+  const removeAllTodoBtn = document.querySelector('.btn-res');
+  const removeProjectBtn = document.querySelector('.btn-del');
+
+  projectAdderBtn.addEventListener('click', () => {
+    createProject();
+    sideBar.classList.contains('open') && sideBar.classList.remove('open');
+  });
+  todoAdderBtn.addEventListener('click', () => {
+    activeProject.addTodo();
+  });
+  todoInput.addEventListener('keyup', event => {
+    if (event.keyCode === 13) {
+      event.preventDefault();
+      activeProject.addTodo();
+    }
+  });
   burgerBtn.addEventListener('click', () => {
     sideBar.classList.toggle('open');
   });
-
-  taskInput.addEventListener('keyup', event => {
-    if (event.keyCode === 13) {
-      event.preventDefault();
-      activeProject.addTask();
-    }
-  });
-
-  addBtn.addEventListener('click', () => {
-    activeProject && activeProject.addTask();
-  });
-
-  taskList.addEventListener('click', () => {
+  todoListContainer.addEventListener('click', () => {
     sideBar.classList.contains('open') && sideBar.classList.remove('open');
+  });
+
+  removeAllTodoBtn.addEventListener('click', () => {
+    activeProject.removeAllTodo();
+  });
+
+  removeProjectBtn.addEventListener('click', () => {
+    removeProject();
   });
 };
 

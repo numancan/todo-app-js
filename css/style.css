@@ -8,9 +8,9 @@
 /* BUTTON CONFIG */
 .btn-del,
 .btn-res,
-.btn-add,
+.btn-todo-add,
 .burger,
-.btn-del-task,
+.btn-del-todo,
 .btn-add-project {
   background: none;
   border: none;
@@ -25,9 +25,9 @@
 
 .btn-del:hover,
 .btn-res:hover,
-.btn-add:hover,
+.btn-todo-add:hover,
 .burger:hover,
-.btn-add-project:hover {
+.btn-todo-add-project:hover {
   background-color: rgba(255, 255, 255, 0.16);
 }
 
@@ -142,11 +142,11 @@ header h1 {
   top: 20%;
 }
 
-.project-list {
+.project-container {
   list-style: none;
 }
 
-.project-list li {
+.project-container li {
   width: 100%;
   height: 50px;
 
@@ -160,7 +160,7 @@ header h1 {
   -webkit-transition: width 300ms, background-color 250ms;
 }
 
-.project-list .active {
+.project-container .active {
   background-color: #2b2e3a;
   width: 110%;
 }
@@ -177,21 +177,28 @@ header h1 {
   -webkit-filter: drop-shadow(0 0 2px rgba(0, 0, 0, 0.5));
 }
 
-/* -------TASK CONTAINER--------- */
-.task-container {
+/* -------TODO CONTAINER--------- */
+.todo-container {
   height: 100%;
   display: flex;
   flex-direction: column;
 }
 
-.task-list {
+.todo-container div {
+  height: 10%;
+  display: flex;
+  align-items: center;
+  justify-content: space-evenly;
+}
+
+.todo-list {
   height: 90%;
   display: flex;
   flex-direction: column;
   justify-content: flex-end;
 }
 
-.task-list li {
+.todo {
   background: linear-gradient(to right, #ee9ca7, #f9bac1);
   margin: 10px 20px;
   padding: 0 8px 0 15px;
@@ -200,7 +207,7 @@ header h1 {
   align-items: center;
 }
 
-.task-list input {
+.todo-list input {
   width: 1.3em;
   height: 1.3em;
   background-color: white;
@@ -210,11 +217,11 @@ header h1 {
   cursor: pointer;
 }
 
-.task-list input:checked {
+.todo-list input:checked {
   background-color: green;
 }
 
-.task-list input + label::after {
+.todo-list input + label::after {
   content: '';
   border-bottom: 0.2em solid green;
   border-radius: 10px;
@@ -228,34 +235,31 @@ header h1 {
   transition: width 300ms, opacity 100ms;
 }
 
-.task-list input:checked + label::after {
+.todo-list input:checked + label::after {
   opacity: 1;
   width: 95%;
 }
 
-.task-list label {
+.todo-list label {
   color: #4d4848;
   flex: 2;
   padding-left: 10px;
   position: relative;
 }
 
-.task-list button {
+.todo-list button {
   transform: rotate(45deg);
 }
 
-.task-list li .btn-del-task i {
+.todo-list li .btn-del-todo i {
   color: #cf4444;
 }
 
-.add-task-area {
-  height: 10%;
-  display: flex;
-  align-items: center;
-  justify-content: space-evenly;
+.btn-del-todo i {
+  pointer-events: none;
 }
 
-.add-task-area input {
+.todo-input {
   width: 80%;
   border: 0;
   border-bottom: 1px solid #707070;
@@ -263,7 +267,7 @@ header h1 {
   background: none;
 }
 
-.btn-add i {
+.btn-todo-add i {
   color: #6ab645;
   font-size: 40px;
 }
