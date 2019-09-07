@@ -4,7 +4,6 @@ const todoInput = document.querySelector('.todo-input');
 const sideBar = document.querySelector('.side-bar');
 const projectTitle = document.querySelector('.project-title');
 
-let idCount = 0;
 let projectList = [];
 let activeProject;
 
@@ -137,6 +136,8 @@ const changeActiveProject = (project = projectList[0]) => {
 };
 
 const getProjectsFromStorge = () => {
+  let idCount = 0;
+  
   for (let i = 0; i < localStorage.length; i++) {
     const key = localStorage.key(i);
     if (key.includes('todo-app')) {
