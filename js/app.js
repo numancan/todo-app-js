@@ -6,6 +6,7 @@ const projectTitle = document.querySelector('.project-title');
 
 let projectList = [];
 let activeProject;
+let idCount = 0;
 
 class Project {
   constructor(name, todos, id) {
@@ -17,6 +18,8 @@ class Project {
 
   addTodo() {
     const input = todoInput.value;
+    if (input === '') return;
+
     const todo = { todo: input, checked: false };
     todoInput.value = '';
 
@@ -88,7 +91,10 @@ class Project {
 }
 
 const createProject = project => {
-  project = project || new Project(prompt('Project Name'), [], idCount++);
+  project =
+    project ||
+    new Project(prompt('Project Name') || 'Todos-' + idCount, [], idCount++);
+
   if (!project.name) return;
   projectList.push(project);
 
@@ -110,7 +116,9 @@ const removeProject = () => {
   projectContainer.removeChild(activeProjectEl);
   projectList = projectList.filter(project => project.id != activeProject.id);
   activeProject = null;
-  changeActiveProject();
+
+  if (!projectList.length) todoListContainer.innerHTML = '';
+  else changeActiveProject();
 };
 
 const getElementByDataId = id => {
@@ -136,8 +144,6 @@ const changeActiveProject = (project = projectList[0]) => {
 };
 
 const getProjectsFromStorge = () => {
-  let idCount = 0;
-  
   for (let i = 0; i < localStorage.length; i++) {
     const key = localStorage.key(i);
     if (key.includes('todo-app')) {
@@ -147,6 +153,7 @@ const getProjectsFromStorge = () => {
       createProject(project);
     }
   }
+
   if (!projectList.length) createProject();
   else changeActiveProject();
 };
@@ -166,7 +173,7 @@ const addEventListeners = () => {
     activeProject.addTodo();
   });
   todoInput.addEventListener('keyup', event => {
-    if (event.keyCode === 13) {
+    if (event.keyCode === 13 && activeProject) {
       event.preventDefault();
       activeProject.addTodo();
     }
